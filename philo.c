@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:00:10 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/05 23:25:20 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/08 08:37:41 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,38 @@
 #include <pthread.h>
 #include "philo.h"
 #include <limits.h>
+int mangeant(t_list *lst)
+{
+	printf("philo's id = %d is eating at %ld\n",);	
+}
+
 void mon_init(char **av, t_info *philo)
 {
+	struct timeval	temp;
+	
 	philo->number_of_philosophers = ft_atoi(av[1]);
 	philo->time_to_die = ft_atoi(av[2]);
 	philo->time_to_eat = ft_atoi(av[3]);
 	philo->time_to_sleep = ft_atoi(av[4]);
 	if (av[5])
 		philo->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
+	gettimeofday(&temp, NULL);
+	philo->temps_init = (temp.tv_sec * 1000) + (temp.tv_usec / 1000);
 }
 
 void	*routine(void *lst)
 {
-	t_list *pv;
+	t_list 			*pv;
+	struct timeval	dst;
+	long			temps;
+
 	pv = (t_list *)lst;
-	while (pv)
+	while (1)
 	{
-		printf("{{{%d}}}\n", pv->id);
-		pv = pv->next;
-		if (pv == NULL)
-			pv = lst;
+		gettimeofday(&dst, NULL);
+		temps = ((dst.tv_sec * 1000) + (dst.tv_usec / 1000)) - pv->info->temps_init;
+		printf("il est %ld bonjour de philo %d \n", temps, pv->id);
+		usleep(100000);
 	}
 	return (NULL);	
 }
@@ -48,8 +60,13 @@ void	creer_philos(t_list **lst, t_info *inf)
 	{
 		new = ft_lstnew(id);
 		ft_lstadd_back(lst, new);
-		pthread_create(&((*lst)->thread), NULL, routine, *lst);
 		id++;
+	}
+	while(*lst)
+	{
+		pthread_create(&((*lst)->thread), NULL, &routine, *(lst));
+		(*lst)->info = inf;
+		*lst = (*lst)->next;
 	}
 }
 
