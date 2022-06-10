@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:41 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/04 17:15:33 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/09 02:45:08 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 		*lst = new;
 	else
 	{
-		while (ptr->next != NULL)
+		while (ptr->next != *lst)
 			ptr = ptr->next;
 		ptr->next = new;
 	}
+	new->next = *lst;
 }
 
 int	ft_lstsize(t_list *lst)

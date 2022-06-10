@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 19:50:07 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/05 23:26:41 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/09 10:38:58 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,39 @@
 // 	// pthread_create(&pt1, NULL, &other_turn, NULL);
 // 	my_turn();
 // }
+// void *your_turn(void *arg)
+// {
+// 	arg = NULL; 
+// 	int i = 0;
+// 	while (1)
+// 	{
+// 		printf ("hello %d\n", i);
+// 		i++;
+// 		sleep(1);
+// 	}
+// 	return arg;
+// }
 
-int main(int ac, char **arg)
+// int main(int ac, char **arg)
+// {
+// 	pthread_t m1;
+// 	pthread_t m2;
+// 	pthread_t m3;
+
+// 	pthread_create(&m1, NULL, your_turn, NULL);
+// 	pthread_create(&m2, NULL, your_turn, NULL);
+// 	pthread_create(&m3, NULL, your_turn, NULL);
+// 	while (1);
+// }
+
+int main()
 {
-    
+	int i = 0;
+	while (1)
+	{	
+		printf("%d allo\n", i);
+		sleep(1);
+		i++;
+	}
+	return 0;
 }
