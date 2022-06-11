@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:00:10 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/10 18:07:24 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/11 22:56:07 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,24 @@
 #include <pthread.h>
 #include "philo.h"
 #include <limits.h>
+
 int	manger(t_list *lst)
 {
+	printf("%ld %d has taken a fork\n", temps((lst)), (lst)->id);
 	pthread_mutex_lock(&((lst)->fork));
-	printf("%ld %d has taken a fork\n",temps((lst)), (lst)->id);
+	printf("%ld %d has taken a fork\n", temps((lst)), (lst)->id);
+	printf("%ld %d is eating\n", temps((lst)), (lst)->id);
+	lst->marat_li_9ssa_fihom++;
+	if (lst->marat_li_9ssa_fihom == lst->info->number_of_times_each_philosopher_must_eat)
+		lst->info->total_meals++;
 	pthread_mutex_lock(&((lst)->next->fork));
-	printf("%ld %d has taken a fork\n",temps((lst)), (lst)->id);
-	printf("%ld %d is eating\n", temps((lst)) , (lst)->id);
-	lst->dernier_diner = temps(lst);
 	usleep((lst)->info->time_to_eat * 1000);
+	lst->dernier_diner = temps(lst);
 	pthread_mutex_unlock(&((lst)->fork));
+	printf("%ld %d is sleeping\n", temps((lst)), (lst)->id);
 	pthread_mutex_unlock(&((lst)->next->fork));
-	printf("%ld %d is sleeping\n",temps((lst)) , (lst)->id);
+	printf("%ld %d is thinking\n", temps((lst)), (lst)->id);
 	usleep((lst)->info->time_to_sleep * 1000);
-	printf("%ld %d is thinking\n",temps((lst)) , (lst)->id);
 	return (0);
 }
 
@@ -35,6 +39,8 @@ int	mourir(t_list *lst)
 {
 	while ((lst))
 	{
+		if (lst->info->total_meals == lst->info->number_of_philosophers)
+			return (0);
 		(lst)->mourir = temps(lst) - lst->dernier_diner;
 		if ((lst)->mourir >= (lst)->info->time_to_die)
 			return (printf("%ld %d died\n", temps(lst), lst->id), 0);
@@ -43,7 +49,7 @@ int	mourir(t_list *lst)
 	return (0);
 }
 
-void mon_init(char **av, t_info *philo)
+void	mon_init(char **av, t_info *philo)
 {
 	struct timeval	temp;
 
@@ -51,6 +57,7 @@ void mon_init(char **av, t_info *philo)
 	philo->time_to_die = ft_atoi(av[2]);
 	philo->time_to_eat = ft_atoi(av[3]);
 	philo->time_to_sleep = ft_atoi(av[4]);
+	philo->total_meals = 0;
 	if (av[5])
 		philo->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
 	gettimeofday(&temp, NULL);
@@ -59,18 +66,16 @@ void mon_init(char **av, t_info *philo)
 
 void	*routine(void *lst)
 {
-	t_list 			*pv;
+	t_list			*pv;
 	struct timeval	dst;
 
 	pv = (t_list *)lst;
+	pv->marat_li_9ssa_fihom = 0;
 	if (pv->id % 2 != 0)
-		usleep(50);
+		usleep(1000);
 	while (1)
-	{
-		// (pv)->mourir = 0;
 		manger(pv);
-	}
-	return (NULL);	
+	return (NULL);
 }
 
 void	creer_philos(t_list **lst, t_info *inf)
@@ -88,15 +93,15 @@ void	creer_philos(t_list **lst, t_info *inf)
 	}
 	new = *lst;
 	pv = *lst;
-	while(*lst)
+	while (*lst)
 	{
 		pthread_create(&((*lst)->thread), NULL, &routine, *(lst));
 		pthread_mutex_init(&((*lst)->fork), NULL);
 		(*lst)->info = inf;
 		*lst = (*lst)->next;
 		if (new == (*lst))
-			break;
-	}	
+			break ;
+	}
 }
 
 int	main(int ac, char **av)
@@ -112,17 +117,11 @@ int	main(int ac, char **av)
 		mon_init(av, &philo);
 		creer_philos(&lst, &philo);
 		if (!mourir(lst))
-			exit (1);
-		// while ((lst))
-		// {
-		// 	(lst)->mourir = temps((lst));
-		// 	if ((lst)->mourir >= (lst)->info->time_to_die)
-		// 		return (printf("%ld %d died\n", temps(lst), lst->id), 0);
-		// 	(lst) = (lst)->next;
-		// }
+			return (-1);
 	}
 	else
 		return (mon_message(2));
-	while (1);
+	while (1)
+		;
 	return (0);
 }
