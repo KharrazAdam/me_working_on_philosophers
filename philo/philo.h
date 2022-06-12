@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:02:37 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/11 22:16:35 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/12 05:11:46 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_info
 	int		time_to_die;
 	int		time_to_eat;
 	int		time_to_sleep;
-	int		number_of_times_each_philosopher_must_eat;
+	int		must_eat;
 	long	temps_init;
 }	t_info;
 
@@ -54,6 +54,6 @@ void	ft_lstadd_back(t_list **lst, t_list *new);
 int		ft_lstsize(t_list *lst);
 
 int		mon_est_entiers(char *str);
-long	temps(t_list *lst);
+long	temps(void);
 
 #endif

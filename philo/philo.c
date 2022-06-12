@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:00:10 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/11 22:56:07 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/12 05:11:50 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 #include "philo.h"
 #include <limits.h>
 
+// void	sleep_time(long time)
+// {
+// 	long	current_time;
+
+// 	current_time = temps(lst);
+// 	while ((ft_time() - current_time) < time)
+// 		usleep(100);
+// }
+
 int	manger(t_list *lst)
 {
 	printf("%ld %d has taken a fork\n", temps((lst)), (lst)->id);
@@ -22,16 +31,19 @@ int	manger(t_list *lst)
 	printf("%ld %d has taken a fork\n", temps((lst)), (lst)->id);
 	printf("%ld %d is eating\n", temps((lst)), (lst)->id);
 	lst->marat_li_9ssa_fihom++;
-	if (lst->marat_li_9ssa_fihom == lst->info->number_of_times_each_philosopher_must_eat)
+	if (lst->marat_li_9ssa_fihom == lst->info->must_eat)
 		lst->info->total_meals++;
 	pthread_mutex_lock(&((lst)->next->fork));
-	usleep((lst)->info->time_to_eat * 1000);
-	lst->dernier_diner = temps(lst);
+	// usleep((lst)->info->time_to_eat * 1000);
+	lst->dernier_diner = temps();
+	sleep_time((lst)->info->time_to_eat);
+	// lst->dernier_diner = temps(lst);
 	pthread_mutex_unlock(&((lst)->fork));
 	printf("%ld %d is sleeping\n", temps((lst)), (lst)->id);
 	pthread_mutex_unlock(&((lst)->next->fork));
+	sleep_time((lst)->info->time_to_sleep);
 	printf("%ld %d is thinking\n", temps((lst)), (lst)->id);
-	usleep((lst)->info->time_to_sleep * 1000);
+	// usleep((lst)->info->time_to_sleep * 1000);
 	return (0);
 }
 
@@ -41,9 +53,9 @@ int	mourir(t_list *lst)
 	{
 		if (lst->info->total_meals == lst->info->number_of_philosophers)
 			return (0);
-		(lst)->mourir = temps(lst) - lst->dernier_diner;
+		(lst)->mourir = temps() - lst->dernier_diner;
 		if ((lst)->mourir >= (lst)->info->time_to_die)
-			return (printf("%ld %d died\n", temps(lst), lst->id), 0);
+			return (printf("%ld %d died\n", temps(), lst->id), 0);
 		(lst) = (lst)->next;
 	}
 	return (0);
@@ -59,7 +71,7 @@ void	mon_init(char **av, t_info *philo)
 	philo->time_to_sleep = ft_atoi(av[4]);
 	philo->total_meals = 0;
 	if (av[5])
-		philo->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
+		philo->must_eat = ft_atoi(av[5]);
 	gettimeofday(&temp, NULL);
 	philo->temps_init = (temp.tv_sec * 1000) + (temp.tv_usec / 1000);
 }
@@ -72,7 +84,7 @@ void	*routine(void *lst)
 	pv = (t_list *)lst;
 	pv->marat_li_9ssa_fihom = 0;
 	if (pv->id % 2 != 0)
-		usleep(1000);
+		usleep(40);
 	while (1)
 		manger(pv);
 	return (NULL);
