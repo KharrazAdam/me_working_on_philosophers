@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:00:10 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 06:07:24 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/13 06:16:11 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int	mourir(t_list *lst)
 void	*routine(void *lst)
 {
 	t_list			*pv;
-	struct timeval	dst;
 	long			daba;
 
 	pv = (t_list *)lst;

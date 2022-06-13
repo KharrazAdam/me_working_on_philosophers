@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:02:37 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 06:05:40 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/13 06:18:21 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,7 @@ void	ft_lstclear(t_list **lst);
 int		mon_est_entiers(char *str);
 long	ft_time(void);
 void	sleep_time(long time);
-
+void	mon_init(char **av, t_info *philo);
+void	creer_philos(t_list **lst, t_info *inf);
+void	*routine(void *lst);
 #endif
