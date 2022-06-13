@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 14:39:41 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/11 22:14:11 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/12 22:20:25 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,18 @@ int	ft_lstsize(t_list *lst)
 		x++;
 	}
 	return (x);
+}
+
+void	ft_lstclear(t_list **lst)
+{
+	t_list	*head;
+	t_list	*tmp;
+
+	head = *lst;
+	while (head != NULL)
+	{
+		tmp = head->next;
+		free(head);
+		head = tmp;
+	}
 }
