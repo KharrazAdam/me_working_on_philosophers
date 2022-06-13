@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 04:13:52 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 06:07:10 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/13 09:15:49 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,5 @@ void	creer_philos(t_list **lst, t_info *inf)
 		*lst = (*lst)->next;
 		if (new == (*lst))
 			break ;
-	}	
+	}
 }

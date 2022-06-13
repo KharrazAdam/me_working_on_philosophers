@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:00:10 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 06:16:11 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/13 07:22:33 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	*routine(void *lst)
 
 	pv = (t_list *)lst;
 	if (pv->id % 2 != 0)
-		usleep(50);
+		usleep(100);
 	daba = ft_time();
 	while (1)
 		manger(pv, daba);
