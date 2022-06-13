@@ -1,20 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
+/*   philo_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/01 11:00:10 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 09:26:59 by akharraz         ###   ########.fr       */
+/*   Created: 2022/06/13 10:20:40 by akharraz          #+#    #+#             */
+/*   Updated: 2022/06/13 10:32:54 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <pthread.h>
-#include "philo.h"
-#include <limits.h>
-
+#include "philo_bonus.h"
 int	manger(t_list *lst, long daba)
 {
 	pthread_mutex_lock(&((lst)->fork));
@@ -87,13 +83,8 @@ int	main(int ac, char **av)
 		if (!mon_parsing(av))
 			return (-1);
 		mon_init(av, &philo);
-		creer_philos(&lst, &philo);
-		if (!mourir(lst))
-			return (-1);
 	}
 	else
 		return (mon_message(2));
-	while (1)
-		;
 	return (0);
 }

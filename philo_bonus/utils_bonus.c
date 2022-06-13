@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/07 04:13:52 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 09:41:59 by akharraz         ###   ########.fr       */
+/*   Created: 2022/06/13 10:27:10 by akharraz          #+#    #+#             */
+/*   Updated: 2022/06/13 10:27:25 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
-#include <stdio.h>
-#include <sys/time.h>
+#include "philo_bonus.h"
 
 long	ft_time(void)
 {

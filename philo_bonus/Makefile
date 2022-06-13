@@ -5,14 +5,14 @@
 #                                                     +:+ +:+         +:+      #
 #    By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/06/13 10:20:54 by akharraz          #+#    #+#              #
-#    Updated: 2022/06/13 10:20:55 by akharraz         ###   ########.fr        #
+#    Created: 2022/06/13 10:20:49 by akharraz          #+#    #+#              #
+#    Updated: 2022/06/13 10:28:15 by akharraz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
+NAME = philo_bonus
 
-SRC = philo.c analyse.c ft_lst_func.c utils.c
+SRC = philo_bonus.c analyse_bonus.c ft_lst_func_bonus.c utils_bonus.c
 
 FLAGS = -Wall -Wextra -Werror
 
