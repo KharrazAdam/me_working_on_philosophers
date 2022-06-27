@@ -1,37 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   analyse_bonus.c                                    :+:      :+:    :+:   */
+/*   mon_parsing.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/13 10:26:12 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 10:26:24 by akharraz         ###   ########.fr       */
+/*   Created: 2022/06/18 19:02:14 by akharraz          #+#    #+#             */
+/*   Updated: 2022/06/27 15:13:44 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <limits.h>
 #include "philo_bonus.h"
-
-long	ft_atoi(char	*str)
-{
-	int		i;
-	long	result;
-
-	i = 0;
-	result = 0;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '+')
-		i++;
-	while ((str[i] >= '0' && str[i] <= '9'))
-	{
-		result = ((result * 10) + (str[i] - 48));
-		if (result > INT_MAX)
-			return (2147483648);
-		i++;
-	}
-	return (result);
-}
 
 int	mon_message(int num)
 {
@@ -78,11 +58,35 @@ int	mon_parsing(char **av)
 	i = 0;
 	while (av[++i])
 	{
-		if (!mon_est_entiers(av[i]))
-			return (0);
+		if (!mon_est_entiers(av[i]) || ft_atoi(av[1]) == 0)
+			return (printf("this value can't be 0!!\n"), 0);
 		if (av[5])
 			if (ft_atoi(av[5]) == 0)
 				return (0);
 	}
+	return (1);
+}
+
+int	mon_init(char **av, t_info *philo)
+{
+	philo->number_of_philosophers = ft_atoi(av[1]);
+	philo->time_to_die = ft_atoi(av[2]);
+	philo->time_to_eat = ft_atoi(av[3]);
+	philo->time_to_sleep = ft_atoi(av[4]);
+	if (av[5])
+		philo->last_param = ft_atoi(av[5]);
+	philo->total_meals = 0;
+	philo->meals_n = 0;
+	if (sem_unlink("forks"))
+		return (0);
+	philo->forks = sem_open("forks", O_CREAT, \
+	666, philo->number_of_philosophers);
+	if (sem_unlink("write_perm"))
+		return (0);
+	philo->write_perm = sem_open("write_perm", O_CREAT, 666, 1);
+	if (sem_unlink("num_meals"))
+		return (0);
+	philo->num_meals = sem_open("num_meals", O_CREAT, 666, 0);
+	philo->dernier_diner = ft_time();
 	return (1);
 }

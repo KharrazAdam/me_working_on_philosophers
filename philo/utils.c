@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 04:13:52 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 09:41:59 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/27 13:07:30 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ void	sleep_time(long time)
 void	mon_init(char **av, t_info *philo)
 {
 	struct timeval	temp;
+	int				i;
 
+	i = -1;
+	philo->total_meals = 0;
 	philo->number_of_philosophers = ft_atoi(av[1]);
 	philo->time_to_die = ft_atoi(av[2]);
 	philo->time_to_eat = ft_atoi(av[3]);
@@ -43,32 +46,36 @@ void	mon_init(char **av, t_info *philo)
 		philo->number_of_times_each_philosopher_must_eat = ft_atoi(av[5]);
 	gettimeofday(&temp, NULL);
 	philo->temps_init = (temp.tv_sec * 1000) + (temp.tv_usec / 1000);
+	pthread_mutex_init(&(philo->write_perm), NULL);
+	pthread_mutex_init(&(philo->die), NULL);
+	philo->forks = malloc(philo->number_of_philosophers \
+	* sizeof(pthread_mutex_t));
+	while (++i < philo->number_of_philosophers)
+		pthread_mutex_init(&(philo->forks[i]), NULL);
 }
 
-void	creer_philos(t_list **lst, t_info *inf)
+int	creer_philos(t_list *lst, t_info *inf)
 {
 	int		id;
-	t_list	*new;
-	t_list	*pv;
+	int		i;
 
 	id = 1;
-	while (id <= inf->number_of_philosophers)
+	i = 0;
+	while (i < inf->number_of_philosophers)
 	{
-		new = ft_lstnew(id);
-		ft_lstadd_back(lst, new);
+		lst[i].id = id;
+		lst[i].many_meals = 0;
 		id++;
+		i++;
 	}
-	new = *lst;
-	pv = *lst;
-	pthread_mutex_init(&(inf->bach_yktbo), NULL);
-	while (*lst)
+	i = 0;
+	while (i < inf->number_of_philosophers)
 	{
-		pthread_create(&((*lst)->thread), NULL, &routine, *(lst));
-		pthread_mutex_init(&((*lst)->fork), NULL);
-		(*lst)->info = inf;
-		(*lst)->dernier_diner = ft_time();
-		*lst = (*lst)->next;
-		if (new == (*lst))
-			break ;
+		lst[i].info = inf;
+		lst[i].dernier_diner = ft_time();
+		if (pthread_create(&(lst[i].thread), NULL, &routine, &lst[i]) != 0)
+			return (0);
+		i++;
 	}
+	return (1);
 }

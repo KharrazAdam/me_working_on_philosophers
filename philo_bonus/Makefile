@@ -5,25 +5,25 @@
 #                                                     +:+ +:+         +:+      #
 #    By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/06/13 10:20:49 by akharraz          #+#    #+#              #
-#    Updated: 2022/06/13 10:28:15 by akharraz         ###   ########.fr        #
+#    Created: 2022/06/18 19:00:51 by akharraz          #+#    #+#              #
+#    Updated: 2022/06/25 08:06:24 by akharraz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo_bonus
-
-SRC = philo_bonus.c analyse_bonus.c ft_lst_func_bonus.c utils_bonus.c
+HEADER = philo_bonus.h
+SRC = philo_bonus.c mon_parsing.c utils.c kill_p.c main.c
 
 FLAGS = -Wall -Wextra -Werror
 
 OFILES = ${SRC:%.c=%.o}
 
-all: ${NAME}	
+all: ${NAME}
 
-${NAME}: ${OFILES}
+${NAME}: ${OFILES} 
 	$(CC) $(FLAGS) $(OFILES) -o $(NAME)
 
-%.o : %.c 
+%.o : %.c ${HEADER}
 	$(CC) $(FLAGS) -c $< -o $@
 
 clean:

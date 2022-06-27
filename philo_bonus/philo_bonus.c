@@ -5,86 +5,118 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/06/13 10:20:40 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 10:32:54 by akharraz         ###   ########.fr       */
+/*   Created: 2022/06/18 18:58:51 by akharraz          #+#    #+#             */
+/*   Updated: 2022/06/27 18:12:41 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-int	manger(t_list *lst, long daba)
+
+void	eating(t_info *philo)
 {
-	pthread_mutex_lock(&((lst)->fork));
-	pthread_mutex_lock(&((lst)->info->bach_yktbo));
-	printf("%ld %d has taken a fork\n", ft_time() - daba, (lst)->id);
-	pthread_mutex_unlock(&((lst)->info->bach_yktbo));
-	pthread_mutex_lock(&((lst)->next->fork));
-	pthread_mutex_lock(&((lst)->info->bach_yktbo));
-	printf("%ld %d has taken a fork\n", ft_time() - daba, (lst)->id);
-	printf("%ld %d is eating\n", ft_time() - daba, (lst)->id);
-	pthread_mutex_unlock(&((lst)->info->bach_yktbo));
-	lst->dernier_diner = ft_time();
-	sleep_time(lst->info->time_to_eat);
-	lst->marat_li_9ssa_fihom++;
-	if (lst->marat_li_9ssa_fihom == \
-	lst->info->number_of_times_each_philosopher_must_eat)
-		lst->info->total_meals++;
-	pthread_mutex_unlock(&((lst)->fork));
-	pthread_mutex_unlock(&((lst)->next->fork));
-	pthread_mutex_lock(&((lst)->info->bach_yktbo));
-	printf("%ld %d is sleeping\n", ft_time() - daba, (lst)->id);
-	pthread_mutex_unlock(&((lst)->info->bach_yktbo));
-	sleep_time(lst->info->time_to_sleep);
-	pthread_mutex_lock(&((lst)->info->bach_yktbo));
-	printf("%ld %d is thinking\n", ft_time() - daba, (lst)->id);
-	pthread_mutex_unlock(&((lst)->info->bach_yktbo));
-	return (0);
+	sem_wait(philo->write_perm);
+	printf("%ld %d is eating\n", ft_time() - philo->t_i, philo->id);
+	philo->meals_n++;
+	if (philo->meals_n == philo->last_param)
+		sem_post(philo->num_meals);
+	philo->dernier_diner = ft_time();
+	sem_post(philo->write_perm);
+	sleep_time(philo->time_to_eat);
+	sem_post(philo->forks);
+	sem_post(philo->forks);
 }
 
-int	mourir(t_list *lst)
+void	routin(t_info *philo)
 {
-	while ((lst))
-	{
-		lst->mourir = ft_time() - lst->dernier_diner;
-		if (lst->info->total_meals == lst->info->number_of_philosophers)
-			return (0);
-		(lst)->mourir = ft_time() - lst->dernier_diner;
-		if ((lst)->mourir == (lst)->info->time_to_die)
-		{
-			pthread_mutex_lock(&lst->info->bach_yktbo);
-			return (printf("%ld %d died\n", lst->mourir, lst->id), 0);
-		}
-		(lst) = (lst)->next;
-	}
-	return (0);
-}
-
-void	*routine(void *lst)
-{
-	t_list			*pv;
-	long			daba;
-
-	pv = (t_list *)lst;
-	if (pv->id % 2 != 0)
-		usleep(100);
-	daba = ft_time();
 	while (1)
-		manger(pv, daba);
-	return (NULL);
+	{
+		sem_wait(philo->write_perm);
+		printf("%ld %d is thinking\n", ft_time() - philo->t_i, philo->id);
+		sem_post(philo->write_perm);
+		sem_wait(philo->forks);
+		sem_wait(philo->write_perm);
+		printf("%ld %d has taken a fork\n", ft_time() - philo->t_i, philo->id);
+		sem_post(philo->write_perm);
+		sem_wait(philo->forks);
+		sem_wait(philo->write_perm);
+		printf("%ld %d has taken a fork\n", ft_time() - philo->t_i, philo->id);
+		sem_post(philo->write_perm);
+		eating(philo);
+		sem_wait(philo->write_perm);
+		printf("%ld %d is sleeping\n", ft_time() - philo->t_i, philo->id);
+		sem_post(philo->write_perm);
+		sleep_time(philo->time_to_sleep);
+	}
 }
 
-int	main(int ac, char **av)
+void	*num_p(void	*arg)
 {
-	t_info		philo;
-	t_list		*lst;
+	t_info			*philo;
+	int				i;
 
-	lst = NULL;
-	if (ac >= 5 && ac <= 6)
+	i = -1;
+	philo = (t_info *)arg;
+	while (1)
 	{
-		if (!mon_parsing(av))
-			return (-1);
-		mon_init(av, &philo);
+		i++;
+		if (i == philo->number_of_philosophers)
+		{
+			sem_close(philo->num_meals);
+			ft_kill(philo);
+			exit(0);
+		}
+		else
+			sem_wait(philo->num_meals);
 	}
-	else
-		return (mon_message(2));
-	return (0);
+}
+
+void	*check(void	*arg)
+{
+	t_info			*philo;
+
+	philo = (t_info *)arg;
+	while (1)
+	{
+		if (ft_time() - philo->dernier_diner >= (long)philo->time_to_die)
+		{
+			sem_wait(philo->write_perm);
+			printf("%ld %d died\n", ft_time() - philo->dernier_diner, philo->id);
+			exit(0);
+		}
+	}
+}
+
+void	creer_philo(t_info *philo)
+{
+	int		id;
+	pid_t	pid;
+
+	pid = 1;
+	id = -1;
+	philo->pids = malloc(philo->number_of_philosophers * sizeof(pid_t));
+		if (!philo->pids)
+			return ;
+	philo->t_i = ft_time();
+	while (id++ < philo->number_of_philosophers - 1 && pid != 0)
+	{
+		pid = fork();
+		if (pid == -1)
+		{
+			ft_kill(philo);
+			free(philo->pids);
+			return ;
+		}
+		philo->id = id + 1;
+		philo->pids[id] = pid;
+		if (pid == 0)
+		{
+			pthread_create(&(philo->check), NULL, &check, philo);
+			routin(philo);
+		}
+	}
+	if (pid != 0)
+	{
+		pthread_create(&(philo->num_p), NULL, &num_p, philo);
+		kill_all(philo);
+	}
 }

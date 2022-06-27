@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 12:10:44 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/13 10:18:25 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/25 07:36:16 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	mon_parsing(char **av)
 	i = 0;
 	while (av[++i])
 	{
-		if (!mon_est_entiers(av[i]))
+		if (!mon_est_entiers(av[i]) || ft_atoi(av[1]) == 0)
 			return (0);
 		if (av[5])
 			if (ft_atoi(av[5]) == 0)

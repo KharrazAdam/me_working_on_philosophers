@@ -6,24 +6,24 @@
 #    By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/06/13 10:20:54 by akharraz          #+#    #+#              #
-#    Updated: 2022/06/13 10:20:55 by akharraz         ###   ########.fr        #
+#    Updated: 2022/06/27 11:02:52 by akharraz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
-
-SRC = philo.c analyse.c ft_lst_func.c utils.c
+HEADER = philo.h
+SRC = philo.c analyse.c utils.c destroy_and_free.c
 
 FLAGS = -Wall -Wextra -Werror
 
 OFILES = ${SRC:%.c=%.o}
 
-all: ${NAME}	
+all: ${NAME}
 
-${NAME}: ${OFILES}
+${NAME}: ${OFILES} 
 	$(CC) $(FLAGS) $(OFILES) -o $(NAME)
 
-%.o : %.c 
+%.o : %.c ${HEADER}
 	$(CC) $(FLAGS) -c $< -o $@
 
 clean:
