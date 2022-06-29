@@ -6,7 +6,7 @@
 /*   By: akharraz <akharraz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 11:00:10 by akharraz          #+#    #+#             */
-/*   Updated: 2022/06/27 14:56:07 by akharraz         ###   ########.fr       */
+/*   Updated: 2022/06/29 12:28:44 by akharraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,12 @@ int	main(int ac, char **av)
 	t_list		*lst;
 
 	lst = NULL;
-	philo = malloc(sizeof(t_info));
-	if (!philo)
-		return (printf("t_info *philo : failed memory allocation\n"), -1);
+	philo = NULL;
 	if (ac >= 5 && ac <= 6)
 	{
+		philo = malloc(sizeof(t_info));
+		if (!philo)
+			return (printf("t_info *philo : failed memory allocation\n"), -1);
 		if (!mon_parsing(av))
 			return (free(philo), -1);
 		mon_init(av, philo);
